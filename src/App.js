@@ -7,51 +7,46 @@ import ProductDetail from './components/products/ProductDetail';
 import AuthenticationPage from './Auth/Pages/AuthenticationPage';
 import ProfilePage from './Auth/Pages/ProfilePage';
 import Cart from './components/Cart/Cart';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect} from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { sendCartdata } from './store/cartActions';
+import { fetchCartData } from './store/cartActions';
 
+let initialLoading = true;
 function App() {
-
-  const isLogin = useSelector((state)=>state.auth.isLoggedIn);
+  const dispatch = useDispatch();
+  const authState = useSelector((state)=>state.auth);
   const showCart = useSelector((state)=>state.modalUi.CartIsVisible);
+  const cart = useSelector(state => state.cartItems);
+  const isLogin = authState.isLoggedIn;
+
+
+
+  useEffect(()=>{
+    dispatch(  fetchCartData())
+  },[dispatch])
+
+
+  useEffect(()=>{
+    if(initialLoading){
+      initialLoading=false;
+      return;
+    }
+    dispatch(sendCartdata(cart))
+  },[cart,dispatch])
   
 
-  // const fetchCartItems = useCallback(async () => {
-  //   const localid = localStorage.getItem('localId');
 
-  //   try {
-  //     const response = await fetch(`https://ecommerce-5696a-default-rtdb.firebaseio.com/items/${localid}.json`);
-  //     if (!response.ok) {
-  //       throw new Error('Fetching cart error, please check again');
-  //     }
-  //     const data = await response.json();
-  //     const fetchedItems = [];
-
-  //     for (const key in data) {
-  //       fetchedItems.push({
-  //         key: key,
-  //         id: data[key].id,
-  //         title: data[key].title,
-  //         amount: data[key].amount,
-  //         price: data[key].price,
-  //         imageurl: data[key].imageurl,
-  //       });
-  //     }
-
-  //     authCtx.setItems(fetchedItems);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }, [authCtx]);
-
-  // useEffect(() => {
-   
-  //     fetchCartItems();
-  
-  // }, [fetchCartItems]);
 
 
   return (
+
+
+
     <>
+   <ToastContainer/>
       {showCart && <Cart/>}
       <Router>
         <Switch>

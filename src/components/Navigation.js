@@ -12,6 +12,7 @@ import { uiAction } from "../store/ui-Slice";
 const Navigation = (props) =>{
     const dispatch = useDispatch()
     const items = useSelector((state)=>state.cartItems.items);
+    const state = useSelector((state)=>state.cartItems);
     const isLogin = useSelector((state)=>state.auth.isLoggedIn)
     const [btnIsHighlighted, setBtnIsHighlighted] = useState(false);
    
@@ -23,7 +24,7 @@ const Navigation = (props) =>{
             return currNum + item.amount
         },0);
 
-        console.log(items)
+        console.log(state);
 
         const btnClasses = `${classes.button} ${btnIsHighlighted ? classes.bump : ''}`;
 
